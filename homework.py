@@ -68,6 +68,7 @@ class Running(Training):
     CALORIES_MEAN_SPEED_SHIFT = 1.79
 
     def get_spent_calories(self):
+        """Получить количество затраченных калорий."""
         spent_calories = ((self.CALORIES_MEAN_SPEED_MULTIPLIER
                            * self.get_mean_speed()
                            + self.CALORIES_MEAN_SPEED_SHIFT)
@@ -123,11 +124,13 @@ class Swimming(Training):
         self.count_pool = count_pool
 
     def get_spent_calories(self):
+        """Получить количество затраченных калорий."""
         spent_calories = ((Swimming.get_mean_speed(self) + self.CALORIES1)
                           * self.CALORIES2 * self.weight * self.duration)
         return spent_calories
 
     def get_mean_speed(self):
+        """Получить среднюю скорость движения."""
         mean_speed = (self.length_pool
                       * self.count_pool
                       / self.M_IN_KM
