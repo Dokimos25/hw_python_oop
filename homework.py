@@ -78,8 +78,8 @@ class Running(Training):
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    CALORIE_1: float = 0.035
-    CALORIE_2: float = 0.029
+    CALORIE_1 = 0.035
+    CALORIE_2 = 0.029
     KMH_IN_MSEC = round(1000 / 3600, 3)
     CM_IN_M = 100
 
