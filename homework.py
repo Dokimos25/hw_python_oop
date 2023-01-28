@@ -1,16 +1,13 @@
+from dataclasses import dataclass
+
+@dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
-    def __init__(self,
-                 training_type: str,
-                 duration: float,
-                 distance: float,
-                 speed: float,
-                 calories: float) -> None:
-        self.training_type = training_type
-        self.duration = duration
-        self.distance = distance
-        self.speed = speed
-        self.calories = calories
+    training_type: str
+    duration: float
+    distance: float
+    speed: float
+    calories: float
 
     def get_message(self):
         out_message = (f'Тип тренировки: {self.training_type}; '
@@ -39,8 +36,7 @@ class Training:
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
-        distance = self.action * self.LEN_STEP / self.M_IN_KM
-        return distance
+        return self.action * self.LEN_STEP / self.M_IN_KM
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
@@ -49,12 +45,12 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        pass
+        raise NotImplementedError
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
         training_info = InfoMessage(
-            training_type=self.__class__.__name__,
+            training_type=type(self).__name__,
             duration=self.duration,
             distance=self.get_distance(),
             speed=self.get_mean_speed(),
@@ -138,13 +134,19 @@ class Swimming(Training):
         return mean_speed
 
 
-def read_package(workout_type: str, data: list) -> Training:
+def read_package(workout_type: str, data: list[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_code = {'SWM': Swimming,
-                     'RUN': Running,
-                     'WLK': SportsWalking}
-    training_object = training_code[workout_type](*data)
-    return training_object
+    training_by_code: dict[str, Training] = {
+        'SWM': Swimming,
+        'RUN': Running,
+        'WLK': SportsWalking
+    }
+
+    if workout_type in training_by_code:
+        training_object = training_by_code[workout_type](*data)
+        return training_object
+
+    raise Exception(f'Получен неизвестный код тренировки: "{workout_type}".')
 
 
 def main(training: Training) -> None:
